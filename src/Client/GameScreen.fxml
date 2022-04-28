@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane fx:id="backGrid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" styleClass="pane" stylesheets="@skin.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.GameScreenController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <AnchorPane fx:id="frontPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" styleClass="pane" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <children>
+            <ImageView fx:id="player3View" fitHeight="225.0" fitWidth="150.0" layoutX="14.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="150.0">
+               <image>
+                  <Image url="@../pictures/card.png" />
+               </image></ImageView>
+            <ImageView fx:id="player1View" fitHeight="225.0" fitWidth="150.0" layoutX="500.0" layoutY="85.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="150.0">
+               <image>
+                  <Image url="@../pictures/card.png" />
+               </image></ImageView>
+            <ImageView fx:id="player2View" fitHeight="225.0" fitWidth="150.0" layoutX="525.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="502.4" AnchorPane.leftAnchor="525.0" AnchorPane.rightAnchor="525.0" AnchorPane.topAnchor="23.0">
+               <image>
+                  <Image url="@../pictures/card.png" />
+               </image></ImageView>
+            <Label id="Target" fx:id="targetAreaLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="300.0" layoutY="348.0" prefHeight="225.0" prefWidth="150.0" styleClass="target" text="Sem přetáhněte kartu pro zahrání" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" wrapText="true" AnchorPane.bottomAnchor="250.0" AnchorPane.leftAnchor="750.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="275.0" />
+            <ImageView fx:id="played1View" fitHeight="225.0" fitWidth="150.0" layoutX="489.0" layoutY="370.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="275.0" />
+            <ImageView fx:id="played2View" fitHeight="225.0" fitWidth="150.0" layoutX="479.0" layoutY="360.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="450.0" AnchorPane.topAnchor="275.0" />
+            <ImageView fx:id="played3View" fitHeight="225.0" fitWidth="150.0" layoutX="499.0" layoutY="275.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="600.0" AnchorPane.topAnchor="275.0" />
+            <Label id="label1" fx:id="trumphColorLabel" layoutX="20.0" layoutY="500.0" styleClass="label1" stylesheets="@skin.css" text="Trumfová barva:" />
+            <Label fx:id="name1Label" layoutX="26.0" layoutY="177.0" styleClass="label2" text="Jméno" AnchorPane.leftAnchor="26.0" AnchorPane.topAnchor="177.0" />
+            <Label fx:id="points1Label" layoutX="26.0" layoutY="195.0" styleClass="label2" text="Body:" />
+            <Label fx:id="playWith1Label" layoutX="26.0" layoutY="213.0" styleClass="label2" text="Hraje s: ?" />
+            <Label fx:id="points2Label" layoutX="533.0" layoutY="73.0" styleClass="label2" text="Body:" AnchorPane.leftAnchor="533.0" />
+            <Label fx:id="name3Label" layoutX="1041.0" layoutY="177.0" styleClass="label2" text="Jméno:" AnchorPane.topAnchor="177.0" />
+            <Label fx:id="points3Label" layoutX="1041.0" layoutY="195.0" styleClass="label2" text="Body:" />
+            <Label fx:id="playWith3Label" layoutX="1041.0" layoutY="213.0" styleClass="label2" text="Hraj s: ?" />
+            <Label fx:id="name2Label" layoutX="533.0" layoutY="55.0" styleClass="label2" text="Jméno:" AnchorPane.topAnchor="55.0" />
+            <Label fx:id="playWith2Label" layoutX="533.0" layoutY="91.0" styleClass="label2" text="Hraje s: ?" />
+            <Label id="label1" fx:id="name4Label" layoutX="1049.0" layoutY="491.0" styleClass="label1" text="Jméno:" />
+            <Label id="label1" fx:id="points4Label" layoutX="1049.0" layoutY="509.0" styleClass="label1" text="Body" />
+            <Label fx:id="sateLabel" layoutX="14.0" layoutY="55.0" styleClass="label1" text="Stav:" />
+         </children>
+      </AnchorPane>
+   </children>
+</GridPane>

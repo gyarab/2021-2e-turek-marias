@@ -1,0 +1,39 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+
+.pane{
+    -fx-background-color:#074212
+}
+.button{
+    -fx-background-color:#cfd1cf;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
+    -fx-pref-height: 50;
+    -fx-pref-width: 100;
+}
+.label1{
+    -fx-text-fill:#ffffff;    
+    -fx-pref-height: 10;
+    -fx-pref-width: 150;
+    -fx-text-alignment:center
+}
+.label2{
+    -fx-pref-height: 10;
+    -fx-pref-width: 150;
+    -fx-text-alignment:center
+}
+
+.listView{    
+    -fx-background-color:#cfd1cf;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+
+}
+.target{
+    -fx-background-color:#cfd1cf;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+
+}
