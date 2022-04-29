@@ -68,21 +68,22 @@ public class Client extends Thread {
         return client;
     }
 
-    public void sendData(Object Data) {
+    public void sendData(Object Data) throws IOException {
 
         sender.SingelsendData(Data, clientSocket);
 
     }
 
-    private void initialize() {
+    private void initialize() throws IOException {
         sender.SingelsendData(name, clientSocket);
-        playersNames = (ArrayList<String>) receiver.read(clientSocket);
+        playersNames = (List<String>) receiver.read(clientSocket);
+        System.out.println(playersNames.size());
         cards = (List<Card>) receiver.read(clientSocket);
 
         Platform.runLater(
                 () -> {
                     controller.initializePlayersInfo(playersNames, playersNames.indexOf(name));
-                    controller.dealCards(gameScreen.getImagesStreams(cards));
+                    controller.dealCards(gameScreen.getImagesStreams(cards), cards);
                 }
         );
 
@@ -90,7 +91,11 @@ public class Client extends Thread {
 
     @Override
     public void run() {
-        initialize();
+        try {
+            initialize();
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
         String roundColor = null;
         int playedRound = 0;
         while (playedRound < 8) {
@@ -101,8 +106,8 @@ public class Client extends Thread {
                         Platform.runLater(
                                 () -> {
                                     try {
-                                        screenManager.showDialog("trumphDialog.fxml");
                                         screenManager.showDialog("playWithDialog.fxml");
+                                        screenManager.showDialog("trumphDialog.fxml");
                                     } catch (IOException ex) {
                                         screenManager.showExceptio(ex);
                                     }
@@ -112,7 +117,7 @@ public class Client extends Thread {
                     if (roundColor == null) {
                         Platform.runLater(
                                 () -> {
-                                    activatePlayableCards("O", "O", "O", cards);
+                                    controller.activateAll();
                                 }
                         );
 
@@ -140,7 +145,8 @@ public class Client extends Thread {
                     } else {
                         Platform.runLater(
                                 () -> {
-                                    setPlayWith(c, (String) receiver.read(clientSocket));
+                                    setPlayWith(c, playersNames.get(4));
+
                                 });
                     }
 
@@ -150,24 +156,34 @@ public class Client extends Thread {
                     Platform.runLater(
                             () -> {
                                 updatePoints((String) receiver.read(clientSocket), points);
+                                controller.reset();
                             }
                     );
 
                     playedRound++;
                 }
                 if (data.getClass() == Class.forName("java.lang.String")) {
-                    Platform.runLater(
-                            () -> {
-                                controller.updateSateLabel((String) receiver.read(clientSocket));
-                            }
-                    );
+                    if (trumphColor != null) {
+                        Platform.runLater(
+                                () -> {
+                                    controller.updateSateLabel((String) data);
+                                }
+                        );
+                    } else {
+                        trumphColor = (String) data;
+                        Platform.runLater(
+                                () -> {
+                                    controller.setTrumphColor(trumphColor);
+                                }
+                        );
 
+                    }
                 }
 
             } catch (ClassNotFoundException ex) {
                 screenManager.showExceptio(ex);
             }
-            waitUntilNextTurn();
+
         }
 
     }

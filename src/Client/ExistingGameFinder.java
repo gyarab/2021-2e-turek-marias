@@ -31,7 +31,7 @@ public class ExistingGameFinder extends Thread {
         port = 49152;
         try {
             socket = new MulticastSocket(port);
-           
+
         } catch (IOException ex) {
 
         }
@@ -43,7 +43,6 @@ public class ExistingGameFinder extends Thread {
     @Override
     public void run() {
 
-      
         while (!interupted) {
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
@@ -53,7 +52,7 @@ public class ExistingGameFinder extends Thread {
                 Logger.getLogger(ExistingGameFinder.class.getName()).log(Level.SEVERE, null, ex);
             }
             String[] s = new String(packet.getData(), 0, packet.getLength()).split(":");
-            ServerPrametr parametr = new ServerPrametr(s[0], s[2], Integer.parseInt(s[1]));         
+            ServerPrametr parametr = new ServerPrametr(s[0], s[2], Integer.parseInt(s[1]));
             if (!existingGames.contains(parametr)) {
                 existingGames.add(parametr);
             }

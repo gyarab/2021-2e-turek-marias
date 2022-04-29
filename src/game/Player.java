@@ -21,7 +21,7 @@ public class Player {
     public Player(int points, String name) {
         this.points = points;
         this.name = name;
-      
+
     }
 
     public String getName() {
@@ -45,7 +45,7 @@ public class Player {
     }
 
     public void setCards(List<Card> cards) {
-        this.cards.addAll(cards);
+        this.cards = cards;
     }
 
     @Override

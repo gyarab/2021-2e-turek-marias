@@ -19,13 +19,16 @@ import shared.CardManager;
 public class GameManager {
 
     private final LinkedList<Card> CARDSET;
-    private final String TRUMPHCOLOR;
+    private String TRUMPHCOLOR;
 
-    public GameManager(String trumphColor) {                              // Konstruktor registru karet - vytvoří registr všech karet ve hře 
+    public GameManager() {                              // Konstruktor registru karet - vytvoří registr všech karet ve hře 
 
         CARDSET = creatCardSet();
-        TRUMPHCOLOR = trumphColor;
 
+    }
+
+    public void setTRUMPHCOLOR(String TRUMPHCOLOR) {
+        this.TRUMPHCOLOR = TRUMPHCOLOR;
     }
 
     private LinkedList<Card> creatCardSet() {
@@ -56,23 +59,23 @@ public class GameManager {
     public LinkedList<Card> getPlayersCardsSet(int playerindex) { // Vrátí karyty rozdané danému hráči.
         LinkedList<Card> cards = new LinkedList<>();
         for (int i = 0; i < 8; i++) {
-
-            cards.add(CARDSET.get(playerindex + i * 4));
+            if (playerindex + i * 4 < CARDSET.size()) {
+                cards.add(CARDSET.get(playerindex + i * 4));
+            }
 
         }
         return cards;
     }
 
-    
-     // Vrátí index vítězné karty, která je zároveň indexem dat o vítězném hráči
+    // Vrátí index vítězné karty, která je zároveň indexem dat o vítězném hráči
     public int getWinerOfRound(List<Card> playedCards, int indexOfFirst) {
-        
+
         if (containsTrump(playedCards)) {
 
             return indexOfHigestValue(cardsFilter(playedCards, TRUMPHCOLOR));
 
         }
-        
+
         return indexOfHigestValue(cardsFilter(playedCards, playedCards.get(indexOfFirst).getColor()));
 
     }
@@ -90,10 +93,10 @@ public class GameManager {
     }
 
     private List<Card> cardsFilter(List<Card> cards, String colorToFilter) { // Vrátí kopii vstupního pole, ze které jsou odstraněny karty jiné barvy než colorToFilter.
-        
+
         for (int i = 0; i < cards.size(); i++) {
             if (!cards.get(i).getColor().equals(colorToFilter)) {
-                cards.set(i, new Card("O","O"));
+                cards.set(i, new Card("O", "O"));
             }
 
         }
@@ -117,7 +120,5 @@ public class GameManager {
         Card c = Collections.max(cards);
         return cards.indexOf(c);
     }
-
-    
 
 }

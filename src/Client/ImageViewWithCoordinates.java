@@ -7,6 +7,7 @@ package Client;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import shared.Card;
 
 /**
  *
@@ -20,6 +21,7 @@ public class ImageViewWithCoordinates extends ImageView {
     private double cursorY;
     private boolean inactive;
     private String cardInfo;
+    private Card repsentedCard;
 
     public ImageViewWithCoordinates(Image image) {
         super(image);
@@ -72,6 +74,14 @@ public class ImageViewWithCoordinates extends ImageView {
 
     public void setCardInfo(String cardInfo) {
         this.cardInfo = cardInfo;
+    }
+
+    public Card getRepsentedCard() {
+        return repsentedCard;
+    }
+
+    public void setRepsentedCard(Card repsentedCard) {
+        this.repsentedCard = repsentedCard;
     }
     
     

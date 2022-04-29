@@ -16,14 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.concurrent.Task;
 import shared.Card;
 
 /**
  *
  * @author jakub
  */
-public class Game extends Task<Void> {
+public class Game extends Thread {
 
     private ServerSocket server;
     private Socket[] playerSockets;
@@ -37,17 +36,18 @@ public class Game extends Task<Void> {
     int port;
     String name;
 
-    public Game(int port, String name) {
+    public Game(int port, String name) throws IOException {
         receiver = new Receiver();
 
         players = new Player[]{new Player(0, null), new Player(0, null),
             new Player(0, null), new Player(0, null)};
+        manager = new GameManager();
         this.port = port;
         this.name = name;
+
     }
 
     private void creatGame(int port, String name) throws UnknownHostException, IOException {
-
         String message = name + ":" + String.valueOf(port) + ":" + InetAddress.getLocalHost().getHostAddress().trim();
         infoSender = new ServerInfoSender(message);
         infoSender.start();
@@ -55,7 +55,6 @@ public class Game extends Task<Void> {
         server = new ServerSocket(port);
 
         connectPlayers();
-
         sender = new Sender();
         trumphColor = null;
 
@@ -86,33 +85,36 @@ public class Game extends Task<Void> {
             names.add(name);
 
         }
-        for (String s : names) {
-            System.out.println(s);
-        }
+        names.add(4, players[0].getName());
         sender.MultisendData(names, null, playerSockets);
     }
 
-    private void sendPlayersCards() {
+    private void sendPlayersCards() throws IOException {
+
         for (int i = 0; i < 4; i++) {
+
             players[i].setCards(manager.getPlayersCardsSet(i));
+            System.out.println(players[i].getCards().size());
             sender.SingelsendData(players[i].getCards(), playerSockets[i]);
+
         }
 
     }
 
     private void initialize() throws IOException {
-        creatGame(port, name);
+
         try {
             setAndSendNames();
             sendPlayersCards();
             boolean b = true;
-            playWith = cratPlayWith((Card) receiver.read(playerSockets[0]));
             sender.SingelsendData(b, playerSockets[0]);
-            trumphColor = (String) receiver.read(playerSockets[0]);
-            manager = new GameManager(trumphColor);
-            sender.MultisendData(trumphColor, playerSockets[0], playerSockets);
-            sender.MultisendData(playWith, playerSockets[0], playerSockets);
-            sender.MultisendData(players[0].getName(), playerSockets[0], playerSockets);
+            playWith = (Card) receiver.read(playerSockets[0]);
+            trumphColor = stringToColor((String) receiver.read(playerSockets[0]));
+            manager.setTRUMPHCOLOR(trumphColor);
+
+            sender.MultisendData(trumphColor, null, playerSockets);
+            sender.MultisendData(playWith, null, playerSockets);
+
         } catch (IOException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -120,20 +122,27 @@ public class Game extends Task<Void> {
     }
 
     @Override
-    protected Void call() throws Exception {
-        
-        initialize();
+    public void run() {
+
         try {
+            creatGame(port, name);
+            initialize();
             startGameLoop();
         } catch (IOException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+
     }
 
     private Card play(int index) {
         boolean startPlay = true;
-        sender.SingelsendData(startPlay, playerSockets[index]);
+        try {
+            sender.SingelsendData(startPlay, playerSockets[index]);
+            sender.MultisendData("Hraje: " + players[index].getName(), playerSockets[index], playerSockets);
+            sender.SingelsendData("Jste na tahu", playerSockets[index]);
+        } catch (IOException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Card c = (Card) receiver.read(playerSockets[index]);
         players[index].updateCards(c);
         try {
@@ -175,8 +184,8 @@ public class Game extends Task<Void> {
             if (startIndex == 4) {
                 startIndex = 0;
             }
-            List<Card> cards = playOneRound(startIndex);
-            evaluateRoud(cards);
+
+            evaluateRoud(playOneRound(startIndex));
             startIndex++;
         }
         sender.MultisendData(evaluateGame(), null, playerSockets);
@@ -184,7 +193,7 @@ public class Game extends Task<Void> {
     }
 
     private String evaluateGame() {
-        int indexOfplayWith = getPlayWithIndex(playWith);
+        int indexOfplayWith = getPlayWithIndex(cratPlayWith(playWith));
         String team2Names = "";
         int team2Points = 0;
         int team1Points = 0;
@@ -223,15 +232,21 @@ public class Game extends Task<Void> {
         } else {
             value = playWithFrom.getValue().substring(0, 1);
         }
-        if (playWithFrom.equals("Žaludy")) {
-            color = "Ž";
-
-        } else {
-            color = playWithFrom.getValue().substring(0, 1);
-        }
+        color = stringToColor(playWithFrom.getColor());
 
         return new Card(value, color);
 
+    }
+
+    private String stringToColor(String colorString) {
+        String color;
+        if (colorString.equals("Žaludy")) {
+            color = "Ž";
+
+        } else {
+            color = colorString.substring(0, 1);
+        }
+        return color;
     }
 
     private int getPlayWithIndex(Card playWith) {
@@ -243,7 +258,5 @@ public class Game extends Task<Void> {
         }
         return -1;
     }
-
-   
 
 }

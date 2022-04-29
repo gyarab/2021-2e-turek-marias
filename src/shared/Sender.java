@@ -8,8 +8,6 @@ package shared;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -36,16 +34,11 @@ public class Sender {
 
     }
 
-    public void SingelsendData(Object data, Socket reciver){
+    public void SingelsendData(Object data, Socket reciver) throws IOException {
 
-        ObjectOutputStream out = null;
-        try {
-            out = new ObjectOutputStream(reciver.getOutputStream());
-            out.writeObject(data);
-            out.flush();
-        } catch (IOException ex) {
-            Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        ObjectOutputStream out = new ObjectOutputStream(reciver.getOutputStream());
+        out.writeObject(data);
+        out.flush();
 
     }
 

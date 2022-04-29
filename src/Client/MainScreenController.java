@@ -53,16 +53,7 @@ public class MainScreenController implements Initializable {
        
     }
 
-    @FXML
-    public void handelClicHelp(ActionEvent event) {
-        Button b = (Button) event.getSource();
-        try {
-            mainScreen.changeScene("trumphDialog.fxml", (Stage) b.getScene().getWindow());
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-            showErrorWindow(ex);
-        }
-    }
+   
 
     private void showErrorWindow(IOException ex) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

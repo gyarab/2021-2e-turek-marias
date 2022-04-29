@@ -22,7 +22,7 @@ public class ServerInfoSender extends Thread {
 
     private DatagramSocket socket;
     private byte[] buffer;
-    private  InetAddress adress;
+    private InetAddress adress;
     private boolean interupted;
     private final int COLDOWN;
     private final int port;
@@ -40,7 +40,7 @@ public class ServerInfoSender extends Thread {
         buffer = message.getBytes();
         interupted = false;
         COLDOWN = 2000;
-        port =49152;
+        port = 49152;
     }
 
     @Override

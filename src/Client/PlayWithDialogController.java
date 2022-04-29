@@ -5,6 +5,7 @@
  */
 package Client;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -37,7 +38,7 @@ public class PlayWithDialogController implements Initializable {
 
     }
 
-    public void handelClickOk(MouseEvent e) {
+    public void handelClickOk(MouseEvent e) throws IOException {
         Card c = new Card((String) valueChoice.getSelectionModel().getSelectedItem(), (String) colorChoice.getSelectionModel().getSelectedItem());
         Client.getClientInstance().sendData(c);
         Button b = (Button) e.getSource();

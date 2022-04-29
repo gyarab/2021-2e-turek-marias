@@ -5,11 +5,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="183.0" prefWidth="325.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.TrumphDialogController">
+<AnchorPane id="AnchorPane" prefHeight="183.0" prefWidth="325.0" styleClass="pane" stylesheets="@skin.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.TrumphDialogController">
    <children>
       <ChoiceBox fx:id="trumphBox" layoutX="87.0" layoutY="79.0" prefWidth="150.0" />
       <Button fx:id="okButton" layoutX="237.0" layoutY="133.0" mnemonicParsing="false" onMouseClicked="#handelClickOk" text="OK" />
-      <Label layoutX="95.0" layoutY="35.0" text="Vyberte trumfovou barvu" />
-      <Label layoutY="83.0" text="Trumfová barva" />
+      <Label layoutX="95.0" layoutY="35.0" styleClass="label1" text="Vyberte trumfovou barvu" />
+      <Label layoutY="83.0" styleClass="label1" text="Trumfová barva" />
    </children>
 </AnchorPane>

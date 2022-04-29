@@ -5,6 +5,7 @@
  */
 package Client;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -32,14 +33,12 @@ public class TrumphDialogController implements Initializable {
         trumphBox.getItems().addAll("Listy", "Kule", "Žaludy", "Srdce");
     }
 
-    public void handelClickOk(MouseEvent e) {
+    public void handelClickOk(MouseEvent e) throws IOException {
         String trumph = (String) trumphBox.getSelectionModel().getSelectedItem();
         Client.getClientInstance().sendData(trumph);
         Button b = (Button) e.getSource();
         Stage stage = (Stage) b.getScene().getWindow();
         stage.close();
     }
-
-   
 
 }

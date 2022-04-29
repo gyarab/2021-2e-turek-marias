@@ -20,10 +20,6 @@ public class GameScreen {
 
     }
 
-   
-
-   
-
     public boolean[] findPlayableCards(String Color, String Value, List<Card> cards) {
         boolean[] indexes = new boolean[8];
         Arrays.fill(indexes, false);
@@ -49,22 +45,16 @@ public class GameScreen {
     public InputStream[] getImagesStreams(List<Card> cards) {
         InputStream[] ImagesStreams = new InputStream[cards.size()];
         for (int i = 0; i < cards.size(); i++) {
-           ImagesStreams[i] = getClass().getResourceAsStream("/pictures/" + cards.get(i).toString() + ".png");
+            ImagesStreams[i] = getClass().getResourceAsStream("/pictures/" + cards.get(i).toString() + ".png");
 
         }
         return ImagesStreams;
     }
-    public InputStream getImageInputStream(Card card){
-    
+
+    public InputStream getImageInputStream(Card card) {
+
         return getClass().getResourceAsStream("/pictures/" + card.toString() + ".png");
-    
+
     }
 
-   
-
-   
-
-   
-
-   
 }

@@ -37,18 +37,17 @@ public class ScreenManager {
 
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText("Upozornění");
-        alert.setTitle(mes);       
+        alert.setTitle(mes);
         alert.showAndWait();
 
     }
-    public void showExceptio(Exception ex){
+
+    public void showExceptio(Exception ex) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Upozornění");
-        alert.setTitle(ex.getMessage());       
+        alert.setTitle(ex.getMessage());
         alert.showAndWait();
 
-    
     }
-    
 
 }

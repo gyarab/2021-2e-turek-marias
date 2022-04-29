@@ -20,6 +20,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import shared.Card;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * FXML Controller class
@@ -85,7 +88,7 @@ public class GameScreenController implements Initializable {
         playWithLabels = new Label[]{null, playWith1Label, playWith2Label, playWith3Label};
         cardsImage = initializeCards();
         addCards(cardsImage);
-        deactivateAllCards();
+
         numberPlayedCards = 0;
 
     }
@@ -93,42 +96,52 @@ public class GameScreenController implements Initializable {
     private void handelOnMouseEntered(MouseEvent event) {
         ImageViewWithCoordinates i = (ImageViewWithCoordinates) event.getSource();
 
-        if (!i.isInactive()) {
-            i.setCursor(Cursor.HAND);
-        }
+        i.setCursor(Cursor.HAND);
 
     }
 
     private void handleOnMousePressed(MouseEvent event) {
         ImageViewWithCoordinates i = (ImageViewWithCoordinates) event.getSource();
-        if (!i.isInactive()) {
-            i.setCursorX(i.getLayoutX() - event.getSceneX());
-            i.setCursorY(i.getLayoutY() - event.getSceneY());
-            i.setCursor(Cursor.CLOSED_HAND);
-        }
+
+        i.setCursorX(i.getLayoutX() - event.getSceneX());
+        i.setCursorY(i.getLayoutY() - event.getSceneY());
+        i.setCursor(Cursor.CLOSED_HAND);
+
     }
 
     private void handleOnMouseDragged(MouseEvent event) {
         ImageViewWithCoordinates i = (ImageViewWithCoordinates) event.getSource();
-        if (!i.isInactive()) {
-            i.setLayoutX(event.getSceneX() + i.getCursorX());
-            i.setLayoutY(event.getSceneY() + i.getCursorY());
-        }
+
+        i.setLayoutX(event.getSceneX() + i.getCursorX());
+        i.setLayoutY(event.getSceneY() + i.getCursorY());
+
     }
 
     private void handleOnMouseReleased(MouseEvent event) {
         ImageViewWithCoordinates i = (ImageViewWithCoordinates) event.getSource();
-        boolean b = i.getLayoutX() > 750 && i.getLayoutX() < 900;
-        boolean a = i.getLayoutY() > 275 && i.getLayoutY() < 500;
-        if (b && a && !i.isInactive()) {
-            
-            i.setLayoutX(300);
-            i.setLayoutY(275);
-            Client.getClientInstance().sendData(a);
+        if (!i.isInactive()) {
+            boolean b = i.getLayoutX() > 700 && i.getLayoutX() < 950;
+            boolean a = i.getLayoutY() > 100 && i.getLayoutY() < 400;
+            if (b && a) {
+
+                i.setLayoutX(300);
+                i.setLayoutY(275);
+                try {
+                    Client.getClientInstance().sendData(i.getRepsentedCard());
+                    deactivateAllCards();
+                } catch (IOException ex) {
+                    Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                i.setLayoutX(i.getDefaultX());
+                i.setLayoutY(i.getDefaultY());
+
+            }
 
         } else {
             i.setLayoutX(i.getDefaultX());
             i.setLayoutY(i.getDefaultY());
+
         }
 
     }
@@ -175,6 +188,14 @@ public class GameScreenController implements Initializable {
     }
 
     @FXML
+    public void activateAllCards() {
+        for (ImageViewWithCoordinates card : cardsImage) {
+            card.setInactive(false);
+        }
+
+    }
+
+    @FXML
     public void activatePlayable(boolean[] indexes) {
         for (int i = 0; i < indexes.length; i++) {
 
@@ -191,10 +212,11 @@ public class GameScreenController implements Initializable {
     }
 
     @FXML
-    public void dealCards(InputStream[] imagesURL) {
+    public void dealCards(InputStream[] imagesURL, List<Card> repreCards) {
         for (int i = 0; i < imagesURL.length; i++) {
 
             cardsImage[i].setImage(new Image(imagesURL[i]));
+            cardsImage[i].setRepsentedCard(repreCards.get(i));
 
         }
 
@@ -213,11 +235,13 @@ public class GameScreenController implements Initializable {
 
         nameLabels[thisIndex].setText("Jméno: " + names.get(thisIndex));
         for (int i = 0; i < 4; i++) {
-            if (i != thisIndex) {
-                nameLabels[i].setText("Jméno: " + names.get(i));
 
+            nameLabels[i].setText("Jméno: " + names.get(thisIndex));
+
+            thisIndex++;
+            if (thisIndex == 4) {
+                thisIndex = 0;
             }
-
         }
 
     }
@@ -241,7 +265,11 @@ public class GameScreenController implements Initializable {
         for (int i = 0; i < 4; i++) {
 
             if (nameLabels[i].getText().equals(s)) {
-                playWithLabels[i].setText("Hraje s: " + playWith.getColor() + " " + playWith.getValue());
+                try {
+                    playWithLabels[i].setText("Hraje s: " + playWith.getColor() + " " + playWith.getValue());
+                } catch (NullPointerException e) {
+                    return;
+                }
             }
 
         }
@@ -250,9 +278,21 @@ public class GameScreenController implements Initializable {
     public void setTrumphColor(String trumphColor) {
         trumphColorLabel.setText(trumphColorLabel.getText() + " " + trumphColor);
     }
+
     @FXML
-    public void updateSateLabel(String message){
-    
+    public void updateSateLabel(String message) {
+
         sateLabel.setText("Stav: " + message);
     }
+
+    @FXML
+    public void reset() {
+
+        for (ImageView i : playedCatds) {
+            i.setCache(false);
+            i.setImage(null);
+        }
+        numberPlayedCards = 0;
+    }
+
 }

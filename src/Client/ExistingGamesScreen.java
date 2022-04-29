@@ -57,9 +57,9 @@ public class ExistingGamesScreen extends Thread {
         finder.interrupt();
     }
 
-    public void joinGame(int index, GameScreenController cont) throws IOException {
+    public void joinGame(int index, GameScreenController cont, String name) throws IOException {
         ServerPrametr serverPrametr = parametrs.get(index);
-        Client client = Client.getClientInstance(serverPrametr.getIp(), serverPrametr.getPort(),"Tony", cont);
+        Client client = Client.getClientInstance(serverPrametr.getIp(), serverPrametr.getPort(),name, cont);
         client.start();
     
     }

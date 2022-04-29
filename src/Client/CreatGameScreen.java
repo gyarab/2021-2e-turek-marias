@@ -13,11 +13,11 @@ import java.io.IOException;
  * @author jakub
  */
 public class CreatGameScreen {
-    public void startNewGame(String name, int port) throws IOException{
+
+    public void startNewGame(String name, int port) throws IOException {
         Game game = new Game(port, name);
-        new Thread(game).start();
-       
-       
+        game.start();
+
     }
-   
+
 }
