@@ -52,6 +52,16 @@ public class MainScreenController implements Initializable {
            mainScreen.changeScene("CreatGameScreen.fxml", (Stage) b.getScene().getWindow());
        
     }
+     @FXML
+    public void handelClicTest(ActionEvent event) {
+        Button b = (Button) event.getSource();
+        try {
+            mainScreen.changeScene("GameScreen.fxml", (Stage) b.getScene().getWindow());
+        } catch (IOException ex) {
+            showErrorWindow(ex);
+        }
+
+    }
 
    
 

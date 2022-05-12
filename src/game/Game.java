@@ -155,18 +155,21 @@ public class Game extends Thread {
 
     private List<Card> playOneRound(int startIndex) {
         List<Card> playedCards = new ArrayList<>();
+
         for (int i = startIndex; i < playerSockets.length; i++) {
-            playedCards.set(i, play(i));
+            playedCards.add(i, play(i));
         }
-        for (int i = 0; i < startIndex; i++) {
-            playedCards.set(i, play(i));
+        if (startIndex != 0) {
+            for (int i = 0; i < startIndex; i++) {
+                playedCards.set(i, play(i));
+            }
         }
         return playedCards;
     }
 
-    private void evaluateRoud(List<Card> playedCards) {
+    private void evaluateRoud(List<Card> playedCards, int startIndex) {
 
-        int indexOfWin = manager.getWinerOfRound(playedCards, 4);
+        int indexOfWin = manager.getWinerOfRound(playedCards, startIndex);
         int points = manager.getRoundPoints(playedCards);
         players[indexOfWin].updatePoints(points);
         try {
@@ -180,12 +183,13 @@ public class Game extends Thread {
 
     private void startGameLoop() throws IOException {
         int startIndex = 0;
+        List<Card> playedCards;
         for (int i = 0; i < 8; i++) {
             if (startIndex == 4) {
                 startIndex = 0;
             }
-
-            evaluateRoud(playOneRound(startIndex));
+            playedCards = playOneRound(startIndex);
+            evaluateRoud(playedCards, startIndex);
             startIndex++;
         }
         sender.MultisendData(evaluateGame(), null, playerSockets);

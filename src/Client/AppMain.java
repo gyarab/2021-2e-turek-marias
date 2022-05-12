@@ -11,6 +11,7 @@ import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -27,7 +28,9 @@ public class AppMain extends Application {
         Scene scene = new Scene(root);
         primaryStage.setTitle("Mariáš");
         primaryStage.setScene(scene);
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/pictures/icon.png")));
         primaryStage.show();
+        
 
     }
 

@@ -5,6 +5,7 @@
  */
 package Client;
 
+import game.GameManager;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import shared.Card;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,7 +44,9 @@ public class GameScreenController implements Initializable {
     GridPane backGrid;
     @FXML
     ImageView played1View;
+    @FXML
     ImageView played2View;
+    @FXML
     ImageView played3View;
     @FXML
     Label name1Label;
@@ -76,20 +80,25 @@ public class GameScreenController implements Initializable {
     Label[] nameLabels;
     Label[] pointsLabels;
     Label[] playWithLabels;
-    int numberPlayedCards;
-    ArrayList<String> names;
+    int numberPlayedCards = 0;
+    int playedCard = -1;
+    List<String> names;
+    GameScreen g = new GameScreen();
+    GameManager m = new GameManager();
+   
+  
 
     @Override
     // Zavolá se při otevření daného okna, takže zde volám metody, které mají přidat do okny prvky před jeho zobrazením
     public void initialize(URL url, ResourceBundle rb) {
-        playedCatds = new ImageView[]{played1View, played2View, played2View};
+        playedCatds = new ImageView[]{played1View, played2View, played3View};
         nameLabels = new Label[]{name4Label, name1Label, name2Label, name3Label};
         pointsLabels = new Label[]{points4Label, points1Label, points2Label, points3Label};
         playWithLabels = new Label[]{null, playWith1Label, playWith2Label, playWith3Label};
         cardsImage = initializeCards();
         addCards(cardsImage);
-
-        numberPlayedCards = 0;
+        deactivateAllCards();
+      
 
     }
 
@@ -124,11 +133,13 @@ public class GameScreenController implements Initializable {
             boolean a = i.getLayoutY() > 100 && i.getLayoutY() < 400;
             if (b && a) {
 
-                i.setLayoutX(300);
+                i.setLayoutX(750);
                 i.setLayoutY(275);
                 try {
-                    Client.getClientInstance().sendData(i.getRepsentedCard());
-                    deactivateAllCards();
+                    Client.getClientInstance().sendData(i.getRepsentedCard());                   
+                    playedCard = Arrays.asList(cardsImage).indexOf(i);
+                    
+
                 } catch (IOException ex) {
                     Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -224,11 +235,15 @@ public class GameScreenController implements Initializable {
 
     @FXML
     public void showPlayedCard(InputStream inputStream) {
-
+      
         playedCatds[numberPlayedCards].setImage(new Image(inputStream));
         numberPlayedCards++;
+      
 
     }
+
+  
+    
 
     @FXML
     public void initializePlayersInfo(List<String> names, int thisIndex) {
@@ -289,10 +304,12 @@ public class GameScreenController implements Initializable {
     public void reset() {
 
         for (ImageView i : playedCatds) {
-            i.setCache(false);
+            
             i.setImage(null);
+            cardsImage[playedCard].setImage(null);
         }
         numberPlayedCards = 0;
+        playedCard = -1;
     }
 
 }

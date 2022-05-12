@@ -33,6 +33,7 @@ public class Client extends Thread {
     private final GameScreen gameScreen;
     private final ScreenManager screenManager;
     private Card lastCard;
+
     private Card playWith;
     private List<Card> cards;
     private String trumphColor;
@@ -96,9 +97,11 @@ public class Client extends Thread {
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String roundColor = null;
+
         int playedRound = 0;
+        String roundColor = null;
         while (playedRound < 8) {
+
             try {
                 Object data = receiver.read(clientSocket);
                 if (data.getClass() == Class.forName("java.lang.Boolean")) {
@@ -114,31 +117,22 @@ public class Client extends Thread {
                                 }
                         );
                     }
-                    if (roundColor == null) {
-                        Platform.runLater(
-                                () -> {
-                                    controller.activateAll();
-                                }
-                        );
-
-                    } else {
-
-                        Platform.runLater(
-                                () -> {
-
-                                    activatePlayableCards(roundColor, lastCard.getColor(), lastCard.getValue(), cards);
-                                }
-                        );
-
+                    else{
+                        controller.activateAll();
                     }
+                  
                 }
                 if (data.getClass() == Class.forName("shared.Card")) {
                     Card c = (Card) data;
                     if (Arrays.asList(CardManager.COLORS_OF_CARDS).contains(c.getColor())) {
                         lastCard = c;
+                        if (roundColor == null) {
+                            roundColor = c.getColor();
+                        }
                         Platform.runLater(
                                 () -> {
                                     showPlayedCard(c);
+
                                 }
                         );
 
@@ -153,13 +147,15 @@ public class Client extends Thread {
                 }
                 if (data.getClass() == Class.forName("java.lang.Integer")) {
                     int points = (int) data;
+                    String name = (String) receiver.read(clientSocket);
                     Platform.runLater(
                             () -> {
-                                updatePoints((String) receiver.read(clientSocket), points);
+                                updatePoints(name, points);
                                 controller.reset();
+                                
                             }
                     );
-
+                    roundColor = null;
                     playedRound++;
                 }
                 if (data.getClass() == Class.forName("java.lang.String")) {
@@ -191,6 +187,7 @@ public class Client extends Thread {
     public void activatePlayableCards(String roundColor, String lastColor, String lastValue, List<Card> cards) {
         boolean[] indexes = null;
         boolean oneActivate = false;
+
         if (lastColor.equals(roundColor)) {
             indexes = gameScreen.findPlayableCards(roundColor, lastValue, cards);
         }
